@@ -1,0 +1,41 @@
+VANCHI VIKASH P M
+Software Engineer · Chennai, India
++91 6382285582 · vikashvanchi@gmail.com
+https://vanchivikash.vercel.app · github.com/vanchivikash · leetcode.com/u/vanjiivikash
+
+EDUCATION
+  Amrita Vishwa Vidyapeetham — B.Tech, Computer Science and Engineering
+  Oct 2020 – April 2024
+
+EXPERIENCE
+  Centre for Development of Advanced Computing (C-DAC), Chennai
+  Project Associate · July 2024 – Present
+  - Built two government portals (mail client, drafting system) in React/Next.js for 500+ users; unit-tested with Jest.
+  - Led end-to-end production deployment of Supply Order Monitoring Portal (SOMP) for Government of India: 99.9% uptime, "Safe to Host" certification from CERT-In, security clearance from CIRA.
+  - Resolved 15+ critical VAPT findings (XSS, CSRF, clickjacking) via HSTS, CSP, SSL/TLS hardening; reduced risk score by 85%.
+
+PROJECTS
+  Chatflow — Red-Team Orchestration Platform · Nov 2025
+    Real-time web terminal + visual flow builder for automated VAPT. Low-latency WebSocket
+    backend orchestrating Nmap, Nuclei, Gobuster; streams stdout into structured findings.
+    TS · React · Node.js · Socket.IO · Docker — chat-flow-app.vercel.app
+
+  Text Explainer (gExplain) — Chrome Extension · Oct–Nov 2025
+    AI-powered text explanation with universal site compatibility (Gmail, GitHub, iframes),
+    4.8/5 rating, 1000+ daily explanations, 200ms avg response. Gemini API + SPA detection.
+    JS (ES6+) · REST — gexplain.vercel.app
+
+  MyStream — Video Streaming App · Apr–May 2024
+    YouTube Data API client with debounced/cached search and polling-based live chat.
+    React · Redux Toolkit · Tailwind — mystream-sigma.vercel.app
+
+SKILLS
+  Languages           TypeScript, JavaScript (ES6+), Python, SQL
+  Frontend            React, Next.js, Redux Toolkit, Tailwind, HTML5, CSS3
+  Backend             Node.js, Socket.IO, REST, Odoo 14, Firebase
+  Security & DevOps   Linux, Apache, SSL/TLS, Burp Suite, VAPT, CI/CD
+  Tools               Git, Postman, Webpack, VS Code, Chrome DevTools, Jest
+
+CURRENTLY LEARNING
+  Math for ML · Deep Learning (Goodfellow) · Karpathy's Zero-to-Hero
+  Hugging Face Transformers · PyTorch · Agent systems · Applied LLM eng

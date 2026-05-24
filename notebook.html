@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vanchi Vikash P M — Notebook 01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&family=Archivo:wght@400;500;700&family=Archivo+Black&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="world.css">
+<link rel="alternate" type="text/plain" href="llms.txt" title="llms.txt — agent-readable">
+<style>
+  /* ───────── THEME TOKENS ───────── */
+  :root, [data-theme="paper"] {
+    --bg: #f6f1e7;
+    --surface: #fbf7ec;
+    --ink: #1d1b16;
+    --dim: #6b6357;
+    --rule: #d8cfbb;
+    --accent: #c84b0e;
+    --accent-soft: #f3d8c8;
+    --code-bg: #ece3cf;
+    --output-bg: #fff9eb;
+    --hl-bg: rgba(200,75,14,.10);
+    --tag-bg: #ece3cf;
+    --kbd: #e6dcc4;
+    --hm-0: #e6dcc4; --hm-1: #f0c8a8; --hm-2: #e89a6c; --hm-3: #d56b32; --hm-4: #a83e10;
+    --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: "Inter", system-ui, sans-serif;
+  }
+  [data-theme="mono"] {
+    --bg: #ffffff;
+    --surface: #fafafa;
+    --ink: #000000;
+    --dim: #6e6e6e;
+    --rule: #e1e1e1;
+    --accent: #0a55ff;
+    --accent-soft: #dde6ff;
+    --code-bg: #f3f3f3;
+    --output-bg: #fbfbfb;
+    --hl-bg: rgba(10,85,255,.07);
+    --tag-bg: #efefef;
+    --kbd: #ebebeb;
+    --hm-0: #ededed; --hm-1: #c8d3f5; --hm-2: #8aa1ee; --hm-3: #4d6fe2; --hm-4: #0a55ff;
+  }
+  [data-theme="terminal"] {
+    --bg: #0a0d0a;
+    --surface: #0e1410;
+    --ink: #b8ffb8;
+    --dim: #6a8e6a;
+    --rule: #1a2a1a;
+    --accent: #39ff7a;
+    --accent-soft: #112a18;
+    --code-bg: #0a1410;
+    --output-bg: #050a07;
+    --hl-bg: rgba(57,255,122,.08);
+    --tag-bg: #112418;
+    --kbd: #15281a;
+    --hm-0: #0e1f12; --hm-1: #0e4429; --hm-2: #006d32; --hm-3: #26a641; --hm-4: #39d353;
+  }
+  [data-theme="midnight"] {
+    --bg: #0b1020;
+    --surface: #111733;
+    --ink: #e6ecff;
+    --dim: #8a93b8;
+    --rule: #232a4a;
+    --accent: #00e1ff;
+    --accent-soft: #122a3a;
+    --code-bg: #0a1230;
+    --output-bg: #08102a;
+    --hl-bg: rgba(0,225,255,.08);
+    --tag-bg: #14204a;
+    --kbd: #1a2452;
+    --hm-0: #131c3a; --hm-1: #1b3a5a; --hm-2: #2073a8; --hm-3: #00b4dc; --hm-4: #00e1ff;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--ink); margin: 0; }
+  body {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.55;
+    transition: background .25s ease, color .25s ease;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent); color: var(--bg); }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-soft); }
+  a:hover { background: var(--hl-bg); }
+
+  /* ───────── TOP TOOLBAR ───────── */
+  .toolbar {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+    padding: 9px 28px;
+    font-family: var(--mono); font-size: 11.5px;
+    display: flex; align-items: center; gap: 22px;
+  }
+  .toolbar .kernel { display: flex; align-items: center; gap: 7px; color: var(--dim); }
+  .toolbar .kernel::before {
+    content: ""; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
+  .toolbar .nav { display: flex; gap: 16px; color: var(--dim); margin-left: auto; }
+  .toolbar .nav a { border: none; color: var(--dim); }
+  .toolbar .nav a:hover { color: var(--ink); background: transparent; }
+  .toolbar .themes { display: flex; gap: 5px; }
+  .toolbar .themes button {
+    all: unset; cursor: pointer;
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 1.5px solid var(--rule);
+    transition: transform .15s, border-color .15s;
+  }
+  .toolbar .themes button[aria-pressed="true"] { border-color: var(--ink); transform: scale(1.1); }
+  .toolbar .themes button[data-t="paper"]    { background: #f6f1e7; }
+  .toolbar .themes button[data-t="mono"]     { background: #ffffff; border-color: #ccc; }
+  .toolbar .themes button[data-t="terminal"] { background: #0a0d0a; }
+  .toolbar .themes button[data-t="midnight"] { background: #0b1020; }
+  .toolbar .agent-pill {
+    font-family: var(--mono); font-size: 10.5px; color: var(--dim);
+    padding: 3px 9px; border: 1px solid var(--rule); border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .toolbar .agent-pill .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 5px var(--accent);
+  }
+
+  /* ───────── PAGE FRAME ───────── */
+  .paper {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 56px 64px 120px;
+    background: var(--surface);
+    min-height: 100vh;
+    border-left: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+    position: relative;
+  }
+  /* Subtle paper grain */
+  [data-theme="paper"] .paper::before,
+  [data-theme="mono"]  .paper::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: radial-gradient(circle at 30% 20%, rgba(0,0,0,.012) 1px, transparent 1px),
+                      radial-gradient(circle at 70% 60%, rgba(0,0,0,.012) 1px, transparent 1px);
+    background-size: 6px 6px, 9px 9px;
+  }
+
+  /* ───────── HEADER ───────── */
+  .arxiv-line {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--dim);
+    display: flex; justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px; margin-bottom: 36px;
+    letter-spacing: .02em;
+  }
+  .title {
+    font-family: var(--serif); font-weight: 500;
+    font-size: 42px; line-height: 1.12;
+    letter-spacing: -.012em;
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+  .title em { font-style: italic; color: var(--accent); }
+  .authors {
+    font-family: var(--serif); font-size: 18px;
+    margin: 18px 0 4px;
+  }
+  .authors sup { font-size: 10px; }
+  .affil { font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
+  .affil a { color: var(--dim); border: none; }
+  .affil a:hover { color: var(--accent); }
+
+  /* ───────── ABSTRACT ───────── */
+  .abstract {
+    margin: 36px 0 14px;
+    padding: 22px 26px;
+    border-left: 3px solid var(--accent);
+    background: var(--hl-bg);
+    font-size: 15.5px; line-height: 1.65;
+  }
+  .abstract .label {
+    font-family: var(--mono); font-size: 10.5px;
+    text-transform: uppercase; letter-spacing: .15em;
+    color: var(--accent); margin-bottom: 8px;
+  }
+  .keywords {
+    font-family: var(--mono); font-size: 11px; color: var(--dim);
+    margin: 12px 0 0;
+  }
+  .keywords b { color: var(--ink); font-weight: 500; }
+
+  /* ───────── SECTION HEADINGS ───────── */
+  h2.sec {
+    font-family: var(--serif); font-weight: 500;
+    font-size: 22px; letter-spacing: -.005em;
+    margin: 56px 0 18px;
+    display: flex; align-items: baseline; gap: 16px;
+  }
+  h2.sec .num {
+    font-family: var(--mono); font-size: 13px;
+    color: var(--accent);
+    min-width: 32px;
+  }
+
+  /* ───────── CODE CELLS (Jupyter feel) ───────── */
+  .cell {
+    margin: 16px 0 28px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--code-bg);
+  }
+  .cell .gutter {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--accent);
+    padding: 8px 14px;
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    border-bottom: 1px solid var(--rule);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .cell .gutter .label { letter-spacing: .05em; }
+  .cell .gutter .run {
+    margin-left: auto; cursor: pointer;
+    font-family: var(--mono); font-size: 10.5px;
+    color: var(--dim); padding: 2px 8px;
+    border: 1px solid var(--rule); border-radius: 3px;
+    background: transparent; transition: all .15s;
+  }
+  .cell .gutter .run:hover { color: var(--accent); border-color: var(--accent); }
+  .cell .code {
+    font-family: var(--mono); font-size: 13.5px; line-height: 1.65;
+    padding: 14px 18px;
+    white-space: pre-wrap;
+  }
+  .cell .code .kw  { color: var(--accent); }
+  .cell .code .str { color: color-mix(in srgb, var(--accent) 70%, var(--ink)); }
+  .cell .code .com { color: var(--dim); font-style: italic; }
+  .cell .code .fn  { color: color-mix(in srgb, var(--accent) 55%, var(--ink)); font-weight: 500; }
+
+  .cell .out {
+    background: var(--output-bg);
+    border-top: 1px solid var(--rule);
+    padding: 18px 22px;
+    font-family: var(--serif); font-size: 16px; line-height: 1.6;
+    position: relative;
+  }
+  .cell .out::before {
+    content: "Out[" attr(data-n) "]:";
+    font-family: var(--mono); font-size: 10.5px;
+    color: var(--dim); display: block; margin-bottom: 10px;
+    letter-spacing: .05em;
+  }
+  .cell .out p { margin: 0 0 .7em; }
+  .cell .out p:last-child { margin-bottom: 0; }
+
+  /* ───────── EXPERIENCE CARD ───────── */
+  .exp {
+    display: grid; grid-template-columns: 1fr auto; align-items: baseline;
+    gap: 14px; margin-bottom: 12px;
+  }
+  .exp .org { font-family: var(--sans); font-size: 17px; font-weight: 600; }
+  .exp .org small { font-family: var(--mono); font-size: 11px; color: var(--dim); font-weight: 400; display: block; margin-top: 2px; }
+  .exp .when { font-family: var(--mono); font-size: 11px; color: var(--dim); text-align: right; }
+  .exp-title { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--dim); margin: 0 0 14px; }
+  .bullets { padding-left: 20px; margin: 0; }
+  .bullets li { margin: 0 0 8px; font-size: 15.5px; line-height: 1.6; }
+  .bullets li::marker { color: var(--accent); content: "▸  "; }
+  .stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .tag {
+    font-family: var(--mono); font-size: 10.5px;
+    padding: 3px 8px; background: var(--tag-bg); color: var(--dim);
+    border-radius: 3px;
+  }
+
+  /* ───────── PROJECT CARDS ───────── */
+  .projects { display: grid; gap: 14px; }
+  .proj {
+    display: grid; grid-template-columns: 48px 1fr;
+    gap: 18px;
+    padding: 18px 0;
+    border-top: 1px dashed var(--rule);
+  }
+  .proj:first-child { border-top: none; padding-top: 6px; }
+  .proj .idx {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    letter-spacing: .05em;
+    padding-top: 4px;
+  }
+  .proj h3 {
+    font-family: var(--serif); font-weight: 500; font-size: 20px;
+    margin: 0 0 4px; letter-spacing: -.005em;
+  }
+  .proj h3 .kind { font-style: italic; color: var(--dim); font-weight: 400; font-size: 14px; margin-left: 8px; }
+  .proj .one {
+    font-size: 15px; line-height: 1.55; margin: 4px 0 10px;
+    color: color-mix(in srgb, var(--ink) 78%, var(--dim));
+  }
+  .proj .meta { display: flex; gap: 14px; font-family: var(--mono); font-size: 11px; color: var(--dim); margin-bottom: 10px; }
+  .proj .meta a { color: var(--accent); border: none; }
+  .proj .live::before { content: "● "; color: var(--accent); }
+
+  /* ───────── SKILLS TABLE ───────── */
+  table.skills {
+    width: 100%; border-collapse: collapse;
+    font-family: var(--sans); font-size: 14px;
+    margin: 8px 0;
+  }
+  table.skills th, table.skills td {
+    text-align: left; padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  table.skills th {
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    color: var(--dim); text-transform: uppercase; letter-spacing: .12em;
+    width: 32%;
+  }
+  table.skills td .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* ───────── FIGURE / HEATMAP ───────── */
+  .figure {
+    margin: 10px 0 14px;
+    padding: 22px 24px 18px;
+    background: var(--code-bg);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    color: var(--ink);
+  }
+  .figure .caption {
+    font-family: var(--serif); font-style: italic; font-size: 13.5px;
+    margin-top: 14px; color: var(--dim); line-height: 1.5;
+  }
+  .figure .caption b { font-style: normal; color: var(--ink); font-weight: 600; margin-right: 4px; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 18px; }
+  .stat { border-left: 2px solid var(--accent); padding: 2px 0 2px 12px; }
+  .stat .v { font-family: var(--mono); font-weight: 700; font-size: 22px; letter-spacing: -.02em; }
+  .stat .k { font-family: var(--mono); font-size: 10.5px; color: var(--dim); text-transform: uppercase; letter-spacing: .12em; margin-top: 2px; }
+
+  /* ───────── HEATMAP LEGEND ───────── */
+  .legend { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10.5px; color: var(--dim); margin-top: 4px; }
+  .legend .cells { display: inline-flex; gap: 3px; }
+  .legend .cells span { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+
+  /* ───────── REFERENCES (Reading list) ───────── */
+  .refs { padding-left: 0; list-style: none; counter-reset: ref; }
+  .refs li {
+    counter-increment: ref;
+    display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: baseline;
+    padding: 11px 0; border-bottom: 1px dashed var(--rule);
+    font-size: 14.5px;
+  }
+  .refs li::before {
+    content: "[" counter(ref) "]";
+    font-family: var(--mono); font-size: 11px; color: var(--dim);
+  }
+  .refs li .title { font-style: italic; }
+  .refs li .by { color: var(--dim); font-size: 13px; }
+  .refs li .status {
+    font-family: var(--mono); font-size: 10.5px;
+    padding: 2px 8px; border-radius: 999px;
+    background: var(--tag-bg); color: var(--dim);
+  }
+  .refs li .status.reading,
+  .refs li .status[data-s="in progress"] { color: var(--accent); background: var(--hl-bg); }
+
+  /* ───────── FOOTER ───────── */
+  footer {
+    margin-top: 80px; padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono); font-size: 11px; color: var(--dim);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  }
+  footer a { color: var(--dim); border: none; }
+  footer a:hover { color: var(--accent); }
+  .cite {
+    margin-top: 30px;
+    padding: 14px 16px;
+    border: 1px solid var(--rule);
+    background: var(--code-bg);
+    font-family: var(--mono); font-size: 11.5px;
+    color: var(--dim); line-height: 1.55;
+    white-space: pre-wrap;
+    border-radius: 3px;
+  }
+  .cite b { color: var(--accent); font-weight: 500; }
+
+  /* Section anchor on hover */
+  h2.sec { scroll-margin-top: 80px; }
+
+  /* Cursor blink in code */
+  .cursor {
+    display: inline-block; width: 8px; height: 1.05em; vertical-align: text-top;
+    background: var(--accent); margin-left: 2px;
+    animation: blink 1.05s steps(2) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* Side notes — margin annotations */
+  .marginnote {
+    position: absolute; right: -220px; width: 190px;
+    font-family: var(--mono); font-size: 10.5px; color: var(--dim);
+    line-height: 1.45;
+  }
+  @media (max-width: 1320px) { .marginnote { display: none; } }
+
+  /* Mobile */
+  @media (max-width: 720px) {
+    .paper { padding: 24px 22px 80px; }
+    .title { font-size: 30px; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    table.skills th { width: 38%; }
+    .proj { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body style="font-family: Newsreader">
+
+<header class="toolbar" aria-label="Notebook toolbar">
+  <span class="kernel">python3 · idle · running</span>
+  <span class="agent-pill" title="Page exposes JSON-LD, /llms.txt, and /resume.txt for autonomous parsing.">
+    <span class="dot"></span>readable by humans &amp; agents
+  </span>
+  <nav class="nav">
+    <a href="#abstract">abstract</a>
+    <a href="#experience">§1</a>
+    <a href="#projects">§2</a>
+    <a href="#leetcode">§3</a>
+    <a href="#learning">§4</a>
+    <a href="#contact">§5</a>
+  </nav>
+  <div class="themes" role="radiogroup" aria-label="Theme">
+    <button data-t="paper"    aria-pressed="true"  title="Paper"></button>
+    <button data-t="mono"     aria-pressed="false" title="Mono"></button>
+    <button data-t="terminal" aria-pressed="false" title="Terminal"></button>
+    <button data-t="midnight" aria-pressed="false" title="Midnight"></button>
+  </div>
+</header>
+
+<main class="paper">
+
+  <div class="arxiv-line">
+    <span>arXiv:2026.05192 [cs.SE] · Notebook 01</span>
+    <span>Submitted 19 May 2026 · v2.0</span>
+  </div>
+
+  <h1 class="title">From <em>production fullstack</em> to <em>applied ML</em>:<br/>one engineer's working notebook.</h1>
+
+  <p class="authors">
+    Vanchi Vikash P. M.<sup>1</sup>
+  </p>
+  <p class="affil">
+    <sup>1</sup>C-DAC Chennai · <a href="mailto:vikashvanchi@gmail.com">vikashvanchi@gmail.com</a> · <a id="lc-link" href="#" target="_blank" rel="noopener">leetcode.com/u/vanjiivikash</a>
+  </p>
+
+  <section class="abstract" id="abstract">
+    <div class="label">Abstract</div>
+    <p id="abstract-body"></p>
+    <p class="keywords"><b>Keywords —</b> software engineering · web security · VAPT · React · Next.js · LLM eng · machine learning</p>
+  </section>
+
+  <!-- ───── §1 About + Experience ───── -->
+  <h2 class="sec" id="experience"><span class="num">§1</span> who and where</h2>
+
+  <div class="cell" data-cell="1">
+    <div class="gutter">
+      <span class="label">In&nbsp;[1]:</span>
+      <button class="run" data-run>▸ re-run</button>
+    </div>
+<div class="code"><span class="com"># bind the author to a variable so the rest of the notebook can reason about him.</span>
+<span class="kw">from</span> bio <span class="kw">import</span> Engineer
+me = <span class="fn">Engineer</span>(<span class="str">"Vanchi Vikash P M"</span>)
+me.<span class="fn">whoami</span>()</div>
+    <div class="out" data-n="1" id="out-1"></div>
+  </div>
+
+  <div class="cell" data-cell="2">
+    <div class="gutter"><span class="label">In&nbsp;[2]:</span><button class="run" data-run>▸ re-run</button></div>
+<div class="code">me.experience[<span class="str">0</span>].<span class="fn">summary</span>(verbose=<span class="kw">True</span>)</div>
+    <div class="out" data-n="2" id="out-2"></div>
+  </div>
+
+  <!-- ───── §2 Projects ───── -->
+  <h2 class="sec" id="projects"><span class="num">§2</span> released work</h2>
+
+  <div class="cell" data-cell="3">
+    <div class="gutter"><span class="label">In&nbsp;[3]:</span><button class="run" data-run>▸ re-run</button></div>
+<div class="code"><span class="kw">for</span> p <span class="kw">in</span> me.projects:
+    p.<span class="fn">render</span>()</div>
+    <div class="out" data-n="3" id="out-3"></div>
+  </div>
+
+  <!-- ───── §3 Skills + LeetCode ───── -->
+  <h2 class="sec" id="leetcode"><span class="num">§3</span> stack &amp; submission activity</h2>
+
+  <div class="cell" data-cell="4">
+    <div class="gutter"><span class="label">In&nbsp;[4]:</span><button class="run" data-run>▸ re-run</button></div>
+<div class="code"><span class="kw">import</span> pandas <span class="kw">as</span> pd
+pd.<span class="fn">DataFrame</span>(me.skills).<span class="fn">T</span></div>
+    <div class="out" data-n="4" id="out-4"></div>
+  </div>
+
+  <div class="cell" data-cell="5">
+    <div class="gutter"><span class="label">In&nbsp;[5]:</span><button class="run" data-run>▸ re-run</button></div>
+<div class="code"><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="str">10</span>, <span class="str">2</span>))
+ax.<span class="fn">imshow</span>(me.leetcode.<span class="fn">heatmap</span>(days=<span class="str">365</span>), cmap=<span class="str">"theme"</span>)
+plt.<span class="fn">show</span>()</div>
+    <div class="out" data-n="5" id="out-5"></div>
+  </div>
+
+  <!-- ───── §4 Currently learning ───── -->
+  <h2 class="sec" id="learning"><span class="num">§4</span> currently learning</h2>
+  <p style="margin: -4px 0 14px; font-style: italic; color: var(--dim); font-size: 14.5px;">
+    The next bibliography I'm working through, in roughly the order I'm tackling it.
+    These are the rails for moving from web apps to applied ML/agent work.
+  </p>
+  <ol class="refs" id="refs-list"></ol>
+
+  <!-- ───── §5 Contact ───── -->
+  <h2 class="sec" id="contact"><span class="num">§5</span> reproducibility</h2>
+  <p style="font-size: 15.5px; line-height: 1.65; margin-bottom: 8px;">
+    Everything described above is reproducible from the public artifacts below.
+    The fastest channel for new conversations — about roles, contracts, or collaboration — is email.
+  </p>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px 24px; font-family: var(--mono); font-size: 13px; margin-top: 14px;" id="contact-grid"></div>
+
+  <pre class="cite" id="cite"></pre>
+
+  <footer>
+    <span>© 2026 Vanchi Vikash P M · also served as
+      <a class="agent-link" href="llms.txt" target="_blank" rel="noopener">📄 /llms.txt</a>
+      <a class="agent-link" href="resume.txt" target="_blank" rel="noopener">📄 /resume.txt</a>
+    </span>
+    <span>built as an interactive notebook · press <kbd style="font-family:var(--mono);padding:1px 6px;background:var(--kbd);border-radius:3px;font-size:10.5px">⌘K</kbd> to ask</span>
+  </footer>
+
+</main>
+
+<script src="bio.js"></script>
+<script src="heatmap.js"></script>
+<script src="ai-chat.js"></script>
+<script src="agent-seo.js"></script>
+<script src="notebook.js"></script>
+<script src="world-art.js"></script>
+<script src="world.js"></script>
+<script src="world-cta.js"></script>
+<script src="chrome.js"></script>
+</body>
+</html>

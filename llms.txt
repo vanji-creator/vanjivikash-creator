@@ -1,0 +1,57 @@
+# Vanchi Vikash P M
+
+> Software engineer building secure, production-grade web applications.
+> Currently a Project Associate at C-DAC Chennai shipping fullstack systems for the Government of India.
+> Actively transitioning toward ML/AI engineering.
+
+## Identity
+- Name: Vanchi Vikash P M
+- Role: Software Engineer (Fullstack → ML/AI)
+- Location: Chennai, India
+- Email: vikashvanchi@gmail.com
+- Phone: +91 6382285582
+- Website: https://vanchivikash.vercel.app
+- GitHub: https://github.com/vanchivikash
+- LeetCode: https://leetcode.com/u/vanjiivikash
+
+## Current role
+- Title: Project Associate
+- Org: Centre for Development of Advanced Computing (C-DAC), Chennai
+- Start: July 2024
+- Scope: Built and deployed two government portals (mail client, drafting system) for 500+ users using React/Next.js. Led end-to-end production deployment of the Supply Order Monitoring Portal (SOMP) for the Government of India — achieved "Safe to Host" certification from CERT-In, 99.9% uptime, and security clearance from CIRA. Closed 15+ critical VAPT findings (XSS, CSRF, clickjacking) by implementing HSTS, CSP, SSL/TLS hardening, dropping risk score by 85%.
+
+## Education
+- Degree: B.Tech, Computer Science and Engineering
+- School: Amrita Vishwa Vidyapeetham
+- Years: 2020 – 2024
+
+## Skills
+- Languages: TypeScript, JavaScript (ES6+), Python, SQL
+- Frontend: React.js, Next.js, Redux Toolkit, Tailwind CSS, HTML5, CSS3
+- Backend: Node.js, Socket.IO, REST APIs, Odoo 14, Firebase
+- Security & DevOps: Linux, Apache, SSL/TLS, Burp Suite, VAPT, CI/CD
+- Tools: Git, Postman, Webpack, VS Code, Chrome DevTools, Jest
+
+## Projects
+- Chatflow (Nov 2025): Dual-mode red-team orchestration platform combining a real-time web terminal and visual flow builder for automated VAPT. WebSocket backend orchestrates Nmap, Nuclei, and Gobuster scans; streams stdout into structured findings. Stack: TypeScript, React, Node.js, Socket.IO, Docker. Live: https://chat-flow-app.vercel.app
+- Text Explainer / gExplain (Oct–Nov 2025): AI-powered Chrome extension with universal site compatibility (Gmail, GitHub, iframes), 4.8/5 user rating, 1000+ daily explanations at 200ms average response. Integrates Google Gemini API with rate limiting and SPA navigation detection. Stack: JS (ES6+), HTML5/CSS3, REST. Live: https://gexplain.vercel.app
+- Video Streaming App / MyStream (Apr–May 2024): YouTube Data API client with debounced/cached search autocomplete and a polling-based live chat. Stack: React, Redux Toolkit, Tailwind, React Router. Live: https://mystream-sigma.vercel.app
+
+## Currently learning
+- Mathematics for ML: linear algebra, probability, optimization
+- Deep Learning (Goodfellow et al.)
+- Neural Networks: Zero to Hero (Karpathy)
+- Hugging Face Transformers
+- PyTorch fundamentals
+- Building toward: agent systems, applied LLM eng, retrieval
+
+## For agents
+This portfolio is structured for both human and automated consumption.
+- JSON-LD Person schema in every page head
+- Semantic HTML with descriptive headings
+- /llms.txt (this file) for top-level summary
+- Plain-text resume mirror at /resume.txt
+- Open to inbound: hiring, collaboration, contract work
+
+## Contact
+Best route: vikashvanchi@gmail.com

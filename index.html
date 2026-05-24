@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vanchi Vikash — Portfolio Variations</title>
+<meta name="description" content="Three portfolio directions by Vanchi Vikash P. M. — a working notebook, a terminal, and an IDE. All three speak to humans and agents."/>
+<meta name="author" content="Vanchi Vikash P M"/>
+<meta property="og:title" content="Vanchi Vikash — Portfolio Variations"/>
+<meta property="og:description" content="Three portfolio directions: notebook, terminal, IDE. Pick the one that speaks your language."/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="alternate" type="text/plain" href="llms.txt" title="llms.txt — agent-readable"/>
+<style>
+  html, body { margin: 0; height: 100%; background: #f6f1e7; font-family: "Inter", system-ui, sans-serif; }
+  body { overflow: hidden; }
+  /* Header strip on top of design_canvas */
+  .topnote {
+    position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+    z-index: 9999;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; color: #6b6357;
+    background: rgba(246,241,231,.92);
+    border: 1px solid #d8cfbb;
+    padding: 8px 16px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .topnote .dot { width: 6px; height: 6px; border-radius: 50%; background: #c84b0e; box-shadow: 0 0 6px #c84b0e; }
+  .topnote b { color: #1d1b16; font-weight: 600; }
+  .topnote .help { cursor: help; opacity: .55; transition: opacity .15s; }
+  .topnote .help:hover { opacity: 1; }
+
+  /* Quick-jump deep links (always visible, top-right) */
+  .jumpbar {
+    position: fixed; top: 12px; right: 14px; z-index: 9999;
+    display: flex; gap: 6px; align-items: center;
+    font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px;
+  }
+  .jumpbar a {
+    text-decoration: none; color: #1d1b16;
+    background: rgba(246,241,231,.92); border: 1px solid #d8cfbb;
+    padding: 6px 10px; border-radius: 999px;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    transition: background .12s, transform .12s, border-color .12s;
+  }
+  .jumpbar a:hover { background: #fff; border-color: #1d1b16; transform: translateY(-1px); }
+  .jumpbar a.primary { background: #e85a1c; color: #f6f1e7; border-color: #1d1b16; box-shadow: 2px 2px 0 #1d1b16; }
+  .jumpbar a.primary:hover { background: #d04f15; }
+  .jumpbar .agent { opacity: .65; }
+
+  /* Hover overlay on artboards */
+  .dc-artboard-link {
+    position: absolute; inset: 0; z-index: 30;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; color: #f6f1e7;
+    background: rgba(29, 27, 22, 0);
+    opacity: 0; transition: background .2s ease, opacity .2s ease;
+    pointer-events: none;
+    font-family: "JetBrains Mono", monospace;
+  }
+  .dc-artboard-host:hover .dc-artboard-link {
+    background: rgba(29, 27, 22, .42);
+    opacity: 1;
+  }
+  .dc-artboard-link .cta {
+    background: #e85a1c; color: #f6f1e7;
+    border: 1.5px solid #1d1b16;
+    padding: 10px 18px;
+    font-size: 13px; letter-spacing: .04em;
+    box-shadow: 4px 4px 0 #1d1b16;
+    transform: translateY(8px); transition: transform .2s ease;
+  }
+  .dc-artboard-host:hover .dc-artboard-link .cta { transform: translateY(0); }
+
+  /* Mobile fallback — vertical stack with direct links */
+  .mobile-stack { display: none; }
+  @media (max-width: 760px) {
+    body { overflow: auto; }
+    .topnote, .jumpbar { display: none; }
+    .design-canvas, .dc-root, [data-dc-root] { display: none !important; }
+    .mobile-stack {
+      display: block; min-height: 100%;
+      padding: 32px 18px 64px; max-width: 540px; margin: 0 auto;
+      font-family: "Inter", system-ui, sans-serif; color: #1d1b16;
+    }
+    .mobile-stack h1 { font-size: 28px; line-height: 1.1; margin: 0 0 6px; letter-spacing: -.02em; }
+    .mobile-stack .sub { font-family: "JetBrains Mono", monospace; font-size: 11px; color: #6b6357; margin: 0 0 22px; }
+    .mobile-card {
+      display: block; text-decoration: none; color: inherit;
+      background: #fff; border: 1.5px solid #1d1b16;
+      padding: 18px 18px 16px; margin-bottom: 14px;
+      box-shadow: 4px 4px 0 #1d1b16;
+      transition: transform .12s ease;
+    }
+    .mobile-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #1d1b16; }
+    .mobile-card .kicker { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: .14em; color: #c84b0e; text-transform: uppercase; margin-bottom: 6px; }
+    .mobile-card .name { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+    .mobile-card .desc { font-size: 13.5px; color: #6b6357; line-height: 1.45; }
+    .mobile-card .open { margin-top: 10px; font-family: "JetBrains Mono", monospace; font-size: 11px; color: #e85a1c; }
+    .mobile-meta { margin-top: 22px; font-family: "JetBrains Mono", monospace; font-size: 11px; color: #6b6357; line-height: 1.6; }
+    .mobile-meta a { color: #1d1b16; }
+  }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Vanchi Vikash P M",
+  "alternateName": "Vanchi Vikash",
+  "jobTitle": "Software Engineer",
+  "worksFor": { "@type": "Organization", "name": "C-DAC Chennai" },
+  "email": "mailto:vikashvanchi@gmail.com",
+  "url": "https://vanchivikash.vercel.app",
+  "address": { "@type": "PostalAddress", "addressLocality": "Chennai", "addressCountry": "IN" },
+  "sameAs": [
+    "https://github.com/vanchivikash",
+    "https://www.linkedin.com/in/vanchivikash",
+    "https://leetcode.com/u/vanjiivikash"
+  ],
+  "knowsAbout": ["React", "Next.js", "Web Security", "VAPT", "LLM Engineering", "Machine Learning"]
+}
+</script>
+</head>
+<body>
+<div class="topnote">
+  <span class="dot"></span><b>Vanchi Vikash · 3 portfolio directions</b>
+  <span class="help" title="Drag to pan the canvas · scroll/pinch to zoom · click any board to enter">· how to navigate ⓘ</span>
+</div>
+
+<nav class="jumpbar" aria-label="Skip to variation">
+  <a href="notebook.html" class="primary">→ notebook</a>
+  <a href="terminal.html">→ terminal</a>
+  <a href="ide.html">→ ide</a>
+  <a href="notebook.html#world" class="agent" title="Illustrated magazine mode">✦ world</a>
+</nav>
+
+<!-- Mobile fallback: canvas isn't usable on touch -->
+<main class="mobile-stack" aria-label="Portfolio variations">
+  <h1>Vanchi Vikash</h1>
+  <p class="sub">Three portfolio directions · pick one</p>
+
+  <a class="mobile-card" href="notebook.html">
+    <div class="kicker">Variation A · recommended</div>
+    <div class="name">The working notebook</div>
+    <div class="desc">A Jupyter / arXiv hybrid. Code cells, BibTeX, paper-quality typography. Best for ML / research signal.</div>
+    <div class="open">open notebook →</div>
+  </a>
+
+  <a class="mobile-card" href="terminal.html">
+    <div class="kicker">Variation B</div>
+    <div class="name">The terminal</div>
+    <div class="desc">Whole portfolio as a shell. Tab autocomplete, ↑ history, CRT scanlines, four themes.</div>
+    <div class="open">open terminal →</div>
+  </a>
+
+  <a class="mobile-card" href="ide.html">
+    <div class="kicker">Variation C · desktop better</div>
+    <div class="name">The codespace</div>
+    <div class="desc">VS Code workspace. README rendered, about.ts, projects/*.ts, leetcode.py. Four real editor themes.</div>
+    <div class="open">open ide →</div>
+  </a>
+
+  <div class="mobile-meta">
+    Also served for agents:
+    <a href="llms.txt">/llms.txt</a> · <a href="resume.txt">/resume.txt</a>
+    <br/>Contact: <a href="mailto:vikashvanchi@gmail.com">vikashvanchi@gmail.com</a>
+  </div>
+</main>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+
+<script type="text/babel">
+function ArtboardFrame({ src, label }) {
+  return (
+    <div className="dc-artboard-host" style={{ position: "relative", width: "100%", height: "100%" }}>
+      <iframe
+        src={src}
+        title={label}
+        style={{ width: "100%", height: "100%", border: 0, background: "#fff", display: "block" }}
+        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
+        loading="lazy"
+      />
+      <a className="dc-artboard-link" href={src} aria-label={`Open ${label} in this tab`}>
+        <span className="cta">▸ click to open {label}</span>
+      </a>
+    </div>
+  );
+}
+
+function Caption({ kicker, title, body, href }) {
+  return (
+    <div style={{
+      position: "absolute", top: -54, left: 0, right: 0,
+      fontFamily: '"JetBrains Mono", ui-monospace, monospace'
+    }}>
+      <div style={{ fontSize: 10.5, letterSpacing: ".12em", color: "#c84b0e", textTransform: "uppercase", marginBottom: 4 }}>{kicker}</div>
+      <div style={{ fontFamily: '"Inter", system-ui, sans-serif', fontSize: 22, fontWeight: 600, color: "#1d1b16", letterSpacing: "-.01em" }}>
+        {title}
+        {href && (
+          <a href={href}
+             onClick={(e) => e.stopPropagation()}
+             style={{ marginLeft: 10, fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: "#e85a1c", textDecoration: "none", borderBottom: "1.5px solid #ef8474", padding: "0 2px" }}
+             title="Open in this tab (no canvas)">
+            open ↗
+          </a>
+        )}
+      </div>
+      <div style={{ fontFamily: '"Inter", system-ui, sans-serif', fontSize: 13, color: "#6b6357", maxWidth: 420, marginTop: 4, lineHeight: 1.5, pointerEvents: "none" }}>{body}</div>
+    </div>
+  );
+}
+
+const W = 1280, H = 820;
+
+const App = () => (
+  <DesignCanvas>
+    <DCSection id="portfolio" title="Three portfolio directions" subtitle="Same content, three personalities. Click any board to enter and explore — open the AI chat (⌘K), switch themes, try the live LeetCode heatmap, type commands. All three have JSON-LD + /llms.txt + /resume.txt for agents. ✦ Click the orange ‘enter the world’ pill in any toolbar to unfold the illustrated magazine.">
+      <DCArtboard id="notebook" label="A · Arxiv Notebook  ·  primary direction" width={W} height={H}>
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+          <Caption
+            kicker="Variation A · recommended"
+            title="The working notebook"
+            href="notebook.html"
+            body="A Jupyter/arXiv hybrid. Code cells with re-runnable outputs, a real abstract, BibTeX citation, references-as-reading-list, paper-quality typography. Best for the ML/research signal."
+          />
+          <ArtboardFrame src="notebook.html" label="notebook" />
+        </div>
+      </DCArtboard>
+
+      <DCArtboard id="terminal" label="B · Terminal OS" width={W} height={H}>
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+          <Caption
+            kicker="Variation B"
+            title="The terminal"
+            href="terminal.html"
+            body="The whole portfolio is a shell. help, whoami, projects, leetcode, learning, contact, theme, ai. Tab autocomplete, ↑ history, CRT scanlines, four themes. Direct, memorable, weird-in-a-good-way."
+          />
+          <ArtboardFrame src="terminal.html" label="terminal" />
+        </div>
+      </DCArtboard>
+
+      <DCArtboard id="ide" label="C · Codespace / IDE" width={W} height={H}>
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+          <Caption
+            kicker="Variation C"
+            title="The codespace"
+            href="ide.html"
+            body="The portfolio opened in VS Code. README rendered like a real README. about.ts, experience.ts, projects/*.ts, skills.json, learning.todo, leetcode.py. Bottom panel runs the LeetCode heatmap. Four real editor themes."
+          />
+          <ArtboardFrame src="ide.html" label="ide" />
+        </div>
+      </DCArtboard>
+    </DCSection>
+  </DesignCanvas>
+);
+
+ReactDOM.createRoot(document.getElementById("root") || document.body.appendChild(Object.assign(document.createElement("div"), { id: "root" }))).render(<App />);
+</script>
+</body>
+</html>
